@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Certificates - Skill Certification Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cert-list {
+            max-width: 600px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        .cert-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr auto auto;
+            align-items: center;
+            column-gap: 20px;
+        }
+
+        .cert-item span {
+            font-size: 16px;
+            color: #333;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>View Certificates</h1>
+    </div>
+
+    <div class="cert-list" id="certList"></div>
+
+    <a href="user.html" class="back-link">Back to Dashboard</a>
+
+    <script>
+        function loadCertificates() {
+            const certList = document.getElementById('certList');
+            const certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+
+            certList.innerHTML = '';
+            certifications.forEach((cert, index) => {
+                const certItem = document.createElement('div');
+                certItem.className = 'cert-item';
+                certItem.innerHTML = `
+                    <span>${cert.name}</span>
+                    <span>Expires: ${cert.expirationDate}</span>
+                    <button onclick="downloadCertificate('${cert.fileData}')">Download</button>
+                    <button class="delete-btn" onclick="deleteCertificate(${index})">Delete</button>
+                `;
+                certList.appendChild(certItem);
+            });
+        }
+
+        function downloadCertificate(fileData) {
+            const a = document.createElement('a');
+            a.href = fileData;
+            a.download = 'certificate';
+            a.click();
+        }
+
+        function deleteCertificate(index) {
+            let certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+            certifications.splice(index, 1);
+            localStorage.setItem('certifications', JSON.stringify(certifications));
+            loadCertificates();  // Reload the list to reflect the deletion
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCertificates);
+    </script>
+
+</body>
+</html>

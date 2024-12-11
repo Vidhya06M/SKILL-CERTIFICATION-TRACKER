@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Certificates - Skill Certification Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cert-item span {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .download-btn {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            transition: text-decoration 0.3s;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Download Certificates</h1>
+    </div>
+
+    <div class="container" id="certContainer">
+        <p id="noCertMessage">Loading certificates...</p>
+    </div>
+
+    <a href="user.html" class="back-link">Back to Dashboard</a>
+
+    <script>
+        function loadCertificates() {
+            const certContainer = document.getElementById('certContainer');
+            const noCertMessage = document.getElementById('noCertMessage');
+            const certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+
+            if (certifications.length === 0) {
+                noCertMessage.textContent = "No certificates available to download.";
+                return;
+            }
+
+            noCertMessage.style.display = 'none';
+            certifications.forEach((cert) => {
+                const certItem = document.createElement('div');
+                certItem.className = 'cert-item';
+                certItem.innerHTML = `
+                    <span>${cert.name}</span>
+                    <button class="download-btn" onclick="downloadCertificate('${cert.fileData}', '${cert.name}')">Download</button>
+                `;
+                certContainer.appendChild(certItem);
+            });
+        }
+
+        function downloadCertificate(fileData, certName) {
+            const a = document.createElement('a');
+            a.href = fileData;
+            a.download = `${certName}.pdf`; // Assumes certificates are in PDF format
+            a.click();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCertificates);
+    </script>
+
+</body>
+</html>

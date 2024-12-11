@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Renewal Dates - Skill Certification Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status-active {
+            color: green;
+        }
+
+        .status-expired {
+            color: red;
+        }
+
+        .nav-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        .add-cert-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            width: fit-content;
+        }
+
+        .add-cert-btn:hover {
+            background-color: #45a049;
+        }
+
+        .renew-btn {
+            padding: 5px 10px;
+            background-color: #FFA500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .renew-btn:hover {
+            background-color: #e69500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Monitor Renewal Dates</h1>
+    </div>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Certification Name</th>
+                    <th>Expiration Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="certTableBody"></tbody>
+        </table>
+
+        <a href="add-certification.html" class="add-cert-btn">Add Certification</a>
+        <a href="user.html" class="nav-link">Back to Dashboard</a>
+    </div>
+
+    <script>
+        function loadRenewalDates() {
+            const certTableBody = document.getElementById('certTableBody');
+            const certificates = JSON.parse(localStorage.getItem('certifications')) || [];
+            const renewalStatuses = JSON.parse(localStorage.getItem('renewalStatuses')) || {};
+
+            certTableBody.innerHTML = ''; // Clear previous rows
+
+            if (certificates.length === 0) {
+                certTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No certifications found.</td></tr>';
+                return;
+            }
+
+            certificates.sort((a, b) => new Date(a.expirationDate) - new Date(b.expirationDate));
+
+            certificates.forEach((cert, index) => {
+                const row = certTableBody.insertRow();
+                row.insertCell(0).innerText = cert.name;
+                row.insertCell(1).innerText = cert.expirationDate;
+
+                const statusCell = row.insertCell(2);
+                const today = new Date();
+                const expiration = new Date(Date.parse(cert.expirationDate));
+
+                // Check the renewal status from localStorage
+                if (renewalStatuses[cert.name] === 'Approved') {
+                    statusCell.innerText = 'Renewal Approved';
+                    statusCell.classList.add('status-active');
+                } else if (renewalStatuses[cert.name] === 'Rejected') {
+                    statusCell.innerText = 'Renewal Rejected';
+                    statusCell.classList.add('status-expired');
+                } else if (expiration > today) {
+                    statusCell.innerText = 'Active';
+                    statusCell.classList.add('status-active');
+                } else {
+                    statusCell.innerText = 'Expired';
+                    statusCell.classList.add('status-expired');
+                }
+
+                // Action Button Cell
+                const actionCell = row.insertCell(3);
+                const renewButton = document.createElement('button');
+                renewButton.innerText = 'Request Renewal';
+                renewButton.classList.add('renew-btn');
+
+                // Check if a renewal request is already sent
+                const renewalRequests = JSON.parse(localStorage.getItem('renewalRequests')) || [];
+                const isRequested = renewalRequests.includes(cert.name);
+
+                if (isRequested) {
+                    renewButton.disabled = true;
+                    renewButton.innerText = 'Request Sent';
+                }
+
+                // Add click event listener to the button
+                renewButton.addEventListener('click', () => {
+                    requestRenewal(cert.name, index);
+                });
+
+                actionCell.appendChild(renewButton);
+            });
+        }
+
+        function requestRenewal(certName) {
+            let renewalRequests = JSON.parse(localStorage.getItem('renewalRequests')) || [];
+            if (!renewalRequests.includes(certName)) {
+                renewalRequests.push(certName);
+                localStorage.setItem('renewalRequests', JSON.stringify(renewalRequests));
+                alert(`Renewal request sent for ${certName}.`);
+                loadRenewalDates(); // Refresh table to update button state
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadRenewalDates);
+    </script>
+
+</body>
+</html>

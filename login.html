@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Skill Certification Tracker</title>
+    <style>
+        /* Add your existing CSS here */
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .header { background-color: #4CAF50; color: white; padding: 15px; text-align: center; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background-color: white; 
+                     border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin: 10px 0 5px; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .error { color: red; margin-bottom: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Skill Certification Tracker - Login</h1>
+    </div>
+
+    <div class="container">
+        <h2>Login</h2>
+        <div id="errorMessage" class="error"></div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const enteredUsername = document.getElementById('username').value;
+            const enteredPassword = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+            const storedRole = localStorage.getItem('role');
+
+            if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
+                // Redirect based on role
+                if (storedRole === 'admin') {
+                    window.location.href = 'admin.html'; // Admin dashboard
+                } else {
+                    window.location.href = 'user.html'; // User dashboard
+                }
+            } else {
+                errorMessage.textContent = 'Invalid username or password';
+            }
+        }
+    </script>
+
+</body>
+</html>

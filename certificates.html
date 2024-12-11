@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Certification Tracker - Certificates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .logout {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: #4CAF50;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            background-color: #45a049;
+            color: white;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .certificate {
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Skill Certification Tracker</h1>
+        <!-- Logout Button -->
+        <a href="#" class="logout" onclick="handleLogout()">Logout</a>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a href="admin.html" class="nav-button">Admin View</a>
+        <a href="user.html" class="nav-button">User View</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Welcome to the Certificates Dashboard</h2>
+        <div id="userDetails">
+            <!-- User-specific information will be loaded here -->
+        </div>
+
+        <!-- Sample certificates -->
+        <div class="certificate">
+            <h3>Data Science Certification</h3>
+            <p>Issued by: Coursera</p>
+            <p>Expiry Date: 2025-06-30</p>
+        </div>
+
+        <div class="certificate">
+            <h3>AI Specialist Certification</h3>
+            <p>Issued by: Udacity</p>
+            <p>Expiry Date: 2026-01-15</p>
+        </div>
+
+        <div class="certificate">
+            <h3>Cloud Computing Certification</h3>
+            <p>Issued by: AWS</p>
+            <p>Expiry Date: 2024-11-22</p>
+        </div>
+
+        <div class="certificate">
+            <h3>Microsoft Azure Certification</h3>
+            <p>Issued by: Microsoft</p>
+            <p>Expiry Date: 2025-12-31</p>
+        </div>
+
+        <div class="certificate">
+            <h3>RPA Certification</h3>
+            <p>Issued by: UiPath</p>
+            <p>Expiry Date: 2026-03-15</p>
+        </div>
+
+        <div class="certificate">
+            <h3>Red Hat Certification</h3>
+            <p>Issued by: Red Hat</p>
+            <p>Expiry Date: 2025-09-10</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Check if the user is logged in (retrieve from localStorage)
+        window.onload = function() {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                // If no user is logged in, redirect to login page
+                window.location.href = 'login.html';
+            } else {
+                // Display the logged-in user's name
+                document.getElementById('userDetails').innerHTML = `<p>Logged in as: <strong>${username}</strong></p>`;
+            }
+        };
+
+        // Logout function
+        function handleLogout() {
+            // Clear the user data from localStorage
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            localStorage.removeItem('email');
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>

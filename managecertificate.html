@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Certifications - Admin</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Manage Certifications</h1>
+    </div>
+
+    <div class="container">
+        <table id="certificationTable">
+            <thead>
+                <tr>
+                    <th>Certification Name</th>
+                    <th>Download</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- Link to the Pending Approvals page -->
+        <a class="link" href="pendingapprovals.html">Pending Approvals</a>
+    </div>
+
+    <script>
+        function loadCertifications() {
+            const certTableBody = document.querySelector('#certificationTable tbody');
+            const certificates = JSON.parse(localStorage.getItem('certifications')) || [];
+
+            certTableBody.innerHTML = '';
+
+            if (certificates.length === 0) {
+                const row = certTableBody.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 3;
+                cell.innerText = 'No certifications available';
+                cell.style.textAlign = 'center';
+                return;
+            }
+
+            certificates.forEach((cert, index) => {
+                const row = certTableBody.insertRow();
+                row.insertCell(0).innerText = cert.name;
+
+                const downloadCell = row.insertCell(1);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = cert.filePath;
+                downloadLink.innerText = 'Download';
+                downloadLink.download = cert.name;
+                downloadCell.appendChild(downloadLink);
+
+                const actionCell = row.insertCell(2);
+                const removeButton = document.createElement('button');
+                removeButton.innerText = 'Remove';
+                removeButton.onclick = () => removeCertification(index);
+                actionCell.appendChild(removeButton);
+            });
+        }
+
+        function removeCertification(index) {
+            let certificates = JSON.parse(localStorage.getItem('certifications')) || [];
+            certificates.splice(index, 1);
+            localStorage.setItem('certifications', JSON.stringify(certificates));
+            loadCertifications();
+        }
+
+        window.onload = loadCertifications;
+    </script>
+
+</body>
+</html>

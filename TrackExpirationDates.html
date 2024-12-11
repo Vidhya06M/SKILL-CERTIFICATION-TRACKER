@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Expiration Dates</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .expired {
+            background-color: #f8d7da;
+        }
+
+        .valid {
+            background-color: #d4edda;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        // Function to check expiration status
+        function checkExpiration(expiryDate) {
+            const currentDate = new Date();
+            const expDate = new Date(expiryDate);
+            return expDate < currentDate ? "Expired" : "Valid";
+        }
+    </script>
+</head>
+<body>
+    <h1>Track Certificate Expirations</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Certificate Name</th>
+                <th>Description</th>
+                <th>Issued Date</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example Data Row -->
+            <tr class="expired">
+                <td>RedHat Certification</td>
+                <td>Certification in Enterprise Linux Administration</td>
+                <td>2024-01-15</td>
+                <td>2026-01-15</td>
+                <td class="status">Valid</td>
+            </tr>
+            <tr class="valid">
+                <td>Oracle Certification</td>
+                <td>Certification in Oracle Database Management</td>
+                <td>2023-06-10</td>
+                <td>2025-06-10</td>
+                <td class="status">Valid</td>
+            </tr>
+            <tr class="expired">
+                <td>Python Programming</td>
+                <td>Advanced Python Programming Course</td>
+                <td>2022-06-15</td>
+                <td>2023-06-15</td>
+                <td class="status">Expired</td>
+            </tr>
+            <!-- Additional rows will be added here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Loop through all table rows and check expiration status
+        const rows = document.querySelectorAll("table tbody tr");
+        rows.forEach(row => {
+            const expiryDate = row.cells[3].textContent; // Get the expiry date from the 4th column
+            const statusCell = row.cells[4]; // The status is in the 5th column
+            const status = checkExpiration(expiryDate); // Get the expiration status
+
+            // Set the status and the row color based on expiration
+            statusCell.textContent = status;
+            if (status === "Expired") {
+                row.classList.add("expired");
+                row.classList.remove("valid");
+            } else {
+                row.classList.add("valid");
+                row.classList.remove("expired");
+            }
+        });
+    </script>
+</body>
+</html>
